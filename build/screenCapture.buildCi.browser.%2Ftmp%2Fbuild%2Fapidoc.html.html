@@ -1,0 +1,324 @@
+<html><head></head><body><div class="apidocDiv">
+<style>
+/*csslint
+*/
+.apidocDiv {
+    background: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.apidocDiv a[href] {
+    color: #33f;
+    font-weight: bold;
+    text-decoration: none;
+}
+.apidocDiv a[href]:hover {
+    text-decoration: underline;
+}
+.apidocCodeCommentSpan {
+    background: #bbf;
+    color: #000;
+    display: block;
+}
+.apidocCodeKeywordSpan {
+    color: #d00;
+    font-weight: bold;
+}
+.apidocCodePre {
+    background: #eef;
+    border: 1px solid;
+    color: #777;
+    padding: 5px;
+    white-space: pre-wrap;
+}
+.apidocFooterDiv {
+    margin-top: 20px;
+    text-align: center;
+}
+.apidocModuleLi {
+    margin-top: 10px;
+}
+.apidocSectionDiv {
+    border-top: 1px solid;
+    margin-top: 20px;
+}
+.apidocSignatureSpan {
+    color: #777;
+    font-weight: bold;
+}
+</style>
+<h1>api documentation for
+    <a href="https://github.com/krampstudio/grunt-jsdoc">grunt-jsdoc (v2.1.0)</a>
+</h1>
+<h4>Integrates jsdoc3 generation into your Grunt build</h4>
+<div class="apidocSectionDiv"><a href="#apidoc.tableOfContents" id="apidoc.tableOfContents"><h1>table of contents</h1></a><ol>
+
+    <li class="apidocModuleLi"><a href="#apidoc.module.grunt-jsdoc">module grunt-jsdoc</a><ol>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.grunt-jsdoc.grunt-jsdoc">
+            function <span class="apidocSignatureSpan"></span>grunt-jsdoc
+            <span class="apidocSignatureSpan">(grunt)</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <span class="apidocSignatureSpan">object <span class="apidocSignatureSpan">grunt-jsdoc.</span>exec</span>
+
+        </li>
+
+    </ol></li>
+
+    <li class="apidocModuleLi"><a href="#apidoc.module.grunt-jsdoc.exec">module grunt-jsdoc.exec</a><ol>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.grunt-jsdoc.exec.buildSpawned">
+            function <span class="apidocSignatureSpan">grunt-jsdoc.exec.</span>buildSpawned
+            <span class="apidocSignatureSpan">(grunt, script, sources, params)</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.grunt-jsdoc.exec.lookup">
+            function <span class="apidocSignatureSpan">grunt-jsdoc.exec.</span>lookup
+            <span class="apidocSignatureSpan">(grunt)</span>
+            </a>
+
+        </li>
+
+    </ol></li>
+
+</ol></div>
+
+<div class="apidocSectionDiv">
+<h1><a href="#apidoc.module.grunt-jsdoc" id="apidoc.module.grunt-jsdoc">module grunt-jsdoc</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.grunt-jsdoc.grunt-jsdoc" id="apidoc.element.grunt-jsdoc.grunt-jsdoc">
+        function <span class="apidocSignatureSpan"></span>grunt-jsdoc
+        <span class="apidocSignatureSpan">(grunt)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">grunt-jsdoc = function (grunt) {
+    'use strict';
+
+    require('load-grunt-tasks')(grunt);
+
+    // Project configuration.
+    grunt.initConfig({
+
+        clean: {
+            options: {
+                force : true
+            },
+            test: ['doc']
+        },
+
+        jsdoc: {
+            basic: {
+                src: ['tasks/**.js', 'tasks/lib/*.js'],
+                options: {
+                    destination: 'doc/basic'
+                }
+            },
+            alternate: {
+                src: ['tasks'],
+                dest : 'doc/alternate',
+                options: {
+                    readme : 'README.md',
+                    recurse : true,
+                    private : false
+                }
+            },
+            spacepack: {
+                src: ['tasks/**/*.js'],
+                options: {
+                    destination: 'doc/pack age',
+                    package: 'package.json'
+                }
+            },
+            docstrap: {
+                src: ['tasks/**.js', 'tasks/lib/*.js', 'README.md'],
+                options: {
+                    destination: 'doc/docstrap',
+                    template: 'node_modules/ink-docstrap/template',
+                    configure: 'node_modules/ink-docstrap/template/jsdoc.conf.json'
+                }
+            },
+            nosrc : {
+                options: {
+                    configure : 'test/nosrc.json'
+                }
+            }
+        },
+        nodeunit: {
+            unit:      ['test/jsdoc-plugin_test.js'],
+            basic:     ['test/jsdoc-basic_test.js'],
+            alternate: ['test/jsdoc-alternate_test.js'],
+            docstrap:  ['test/jsdoc-docstrap_test.js'],
+            spacepack: ['test/jsdoc-spacepack_test.js'],
+            nosrc: ['test/jsdoc-nosrc_test.js']
+        },
+
+        eslint: {
+            all: {
+                src: ['Gruntfile.js', 'tasks/**/*.js', 'test/**/*.js']
+            }
+        }
+    });
+
+    // Load local tasks.
+    grunt.loadTasks('tasks');
+
+
+    //testing tasks
+    grunt.registerTask('test-basic',     'Test basic jsdoc', ['jsdoc:basic', 'nodeunit:basic']);
+    grunt.registerTask('test-alternate', 'Test jsdoc with alternate options', ['jsdoc:alternate', 'nodeunit:alternate']);
+    grunt.registerTask('test-docstrap',  'Test jsdoc with a template', ['jsdoc:docstrap', 'nodeunit:docstrap']);
+    grunt.registerTask('test-spacepack', 'Test jsdoc with a package and spaces in the paths', ['jsdoc:spacepack', 'nodeunit:spacepack
+']);
+    grunt.registerTask('test-nosrc', 'Test jsdoc without src and dest, only a config', ['jsdoc:nosrc', 'nodeunit:nosrc']);
+    grunt.registerTask('test',           'Full test suite', ['clean:test', 'nodeunit:unit', 'test-basic', 'test-alternate', 'test
+-docstrap', 'test-spacepack', 'test-nosrc']);
+
+    grunt.registerTask('default', 'Default task will lint and test', ['eslint:all', 'test']);
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
+
+
+
+</div>
+
+<div class="apidocSectionDiv">
+<h1><a href="#apidoc.module.grunt-jsdoc.exec" id="apidoc.module.grunt-jsdoc.exec">module grunt-jsdoc.exec</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.grunt-jsdoc.exec.buildSpawned" id="apidoc.element.grunt-jsdoc.exec.buildSpawned">
+        function <span class="apidocSignatureSpan">grunt-jsdoc.exec.</span>buildSpawned
+        <span class="apidocSignatureSpan">(grunt, script, sources, params)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">buildSpawned = function (grunt, script, sources, params) {
+
+    var flag;
+    var cmd = script;
+    var args =[];
+
+
+    // Compute JSDoc options
+    for (flag in params) {
+        if (params.hasOwnProperty(flag)) {
+            if (params[flag] !== false) {
+                args.push('--' + flag);
+            }
+            if (typeof params[flag] === 'string') {
+                args.push(params[flag]);
+            }
+        }
+    }
+
+    if (!Array.isArray(sources)) {
+        sources = [sources];
+    }
+    args = args.concat(sources);
+
+    grunt.log.debug('Running : ' + cmd + ' ' + args.join(' '));
+
+    return spawn(cmd, args);
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+        grunt.log.error('unable to create documentation folder : ' + params.destination);
+        grunt.fail.warn('Wrong configuration', errorCode.generic);
+    }
+}
+
+//execution of the jsdoc command
+grunt.event.emit('generating.jsdoc', jsdoc, sources, params);
+child = exec.<span class="apidocCodeKeywordSpan">buildSpawned</span>(grunt, jsdoc, sources, params);
+
+child.stdout.on('data', grunt.log.debug);
+child.stderr.on('data', function(data) {
+    grunt.log.debug(data);
+    if (!options.ignoreWarnings) {
+        grunt.log.error(data);
+    }
+...</pre></li>
+    </ul>
+
+
+
+    <h2>
+        <a href="#apidoc.element.grunt-jsdoc.exec.lookup" id="apidoc.element.grunt-jsdoc.exec.lookup">
+        function <span class="apidocSignatureSpan">grunt-jsdoc.exec.</span>lookup
+        <span class="apidocSignatureSpan">(grunt)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">lookup = function (grunt) {
+    var i, binPath, paths;
+    var nodePath = process.env.NODE_PATH || '';
+
+    //check first the base path into the cwd
+    paths = [
+        __dirname + '/../../node_modules/.bin/jsdoc',
+        __dirname + '/../../node_modules/jsdoc/jsdoc.js',
+        __dirname + '/../../../jsdoc/jsdoc.js'
+    ];
+
+    //fall back on global if not found at the usual location
+    nodePath.split(path.delimiter).forEach(function(p) {
+        if (!/\/$/.test(p)) {
+            p += '/';
+        }
+        paths.push(p + '/jsdoc/jsdoc.js');
+    });
+
+    for (i in paths) {
+        binPath = path.resolve(paths[i]);
+        if (grunt.file.exists(binPath) &amp;&amp; grunt.file.isFile(binPath)) {
+            return binPath;
+        }
+    }
+
+    return;
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+});
+
+if (jsdocPath &amp;&amp; grunt.file.exists(jsdocPath) &amp;&amp; grunt.file.isFile(jsdocPath)) {
+    //use the given jsdoc path if set
+    jsdoc = jsdocPath;
+} else {
+    //lookup jsdoc
+    jsdoc = exec.<span class="apidocCodeKeywordSpan">lookup</span>(grunt);
+}
+
+//check if jsdoc npm module is installed
+if (jsdoc === undefined) {
+    grunt.log.error('Unable to locate jsdoc');
+    grunt.fail.warn('Wrong installation/environnement', errorCode.generic);
+}
+...</pre></li>
+    </ul>
+
+
+</div>
+
+<div class="apidocFooterDiv">
+    [ this document was created with
+    <a href="https://github.com/kaizhu256/node-utility2" target="_blank">utility2</a>
+    ]
+</div>
+</div>
+</body></html>
